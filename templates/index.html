@@ -73,7 +73,7 @@
         document.getElementById('converted_text').innerText = inputText;
 
         // Make an asynchronous request to the Flask backend hosted on Hugging Face
-        fetch('/proxy', {
+        fetch('https://huggingface.co/spaces/lord-reso/host/proxy', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
