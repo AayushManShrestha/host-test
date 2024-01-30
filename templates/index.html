@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multispeaker Neural Voice Cloning in Nepali language</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #output_section {
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Multispeaker Neural Voice Cloning in Nepali language</h1>
+
+        <label for="font_select">Select Font Type:</label>
+        <select name="font_select" id="font_select" required>
+            <option value="Preeti">Preeti</option>
+            <option value="Unicode">Unicode</option>
+        </select>
+
+        <textarea name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required></textarea>
+
+        <button id="synthesize_button" onclick="synthesizeVoice()">Synthesize Voice</button>
+        
+        <div id="output_section">
+            <h2>Output</h2>
+
+            <div id="converted_text_output">
+                <h3>Converted Text</h3>
+                <p id="converted_text"></p>
+            </div>
+
+            <div id="mel_spectrogram">
+                <h3>Mel-Spectrogram</h3>
+                <!-- Display Mel-Spectrogram image here -->
+            </div>
+
+            <div id="audio_file">
+                <h3>Audio File</h3>
+                <audio controls id="audio_player"></audio>
+            </div>
+
+            <div id="waveform">
+                <h3>Waveform</h3>
+                <!-- Display Waveform image or visualization here -->
+            </div>
+        </div>
+    </div>    
+</body>
+</html>
