@@ -1,13 +1,12 @@
 function synthesizeVoice() {
-    alert('Generating audio. Please wait');
     var fontType = document.getElementById('font_select').value;
     var inputText = document.getElementById('input_text').value;
 
     // Display the input text after conversion
     document.getElementById('converted_text').innerText = inputText;
 
-    // Make an asynchronous request to the Flask backend hosted on Hugging Face
-    fetch('https://huggingface.co/spaces/lord-reso/host/synthesize', {
+    // Make an asynchronous request to the Flask backend
+    fetch('/synthesize', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,6 +15,7 @@ function synthesizeVoice() {
             font_select: fontType,
             input_text: inputText,
         }),
+        mode: 'cors',
     })
     .then(response => response.json())
     .then(data => {
@@ -26,22 +26,26 @@ function synthesizeVoice() {
         var melSpectrogramElement = document.getElementById('mel_spectrogram');
         melSpectrogramElement.innerHTML = '<h3>Mel-Spectrogram</h3><img src="data:image/png;base64,' + data.mel_spectrogram + '" alt="Mel-Spectrogram">';
 
-        // Use the existing audio element
-        var audio = document.getElementById('audio_player');
+        // Provide a link to download the generated audio file
+        var audioLinkElement = document.getElementById('audio_link');
+        audioLinkElement.href = data.audio_path;
 
-        // Before playing the audio, check if it's already playing
-        if (!audio.paused) {
-            audio.pause(); // Pause the audio if it's already playing
-        }
+        // Create an audio element
+        var audioPlayerElement = document.createElement('audio');
+        audioPlayerElement.controls = true;
+        audioPlayerElement.src = data.audio_path;
 
-        // Set the audio source
-        audio.src = 'data:audio/wav;base64,' + data.audio_data;
-        audio.type = 'audio/wav'; // Set the audio type explicitly
-        alert('Audio Generated');
+        // Append the audio element to the audio_file div
+        var audioFileElement = document.getElementById('audio_file');
+        audioFileElement.innerHTML = '<h3>Audio File</h3>';
+        audioFileElement.appendChild(audioPlayerElement);
 
-        // Update Waveform
-        var waveformElement = document.getElementById('waveform');
-        waveformElement.innerHTML = '<h3>Waveform</h3><img src="data:image/png;base64,' + data.waveform + '" alt="Waveform">';
+        // Play the audio
+        audioPlayerElement.play();
+        // Update other elements as needed
+
+        // For now, let's alert the user with the response data (you can customize this part)
+        alert("Response from Backend:\n" + JSON.stringify(data));
     })
     .catch(error => {
         // Handle errors, if any
