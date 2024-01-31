@@ -4,7 +4,7 @@ function synthesizeVoice() {
     var inputText = document.getElementById('input_text').value;
 
     // Display the input text after conversion
-    document.getElementById('converted_text').innerText = nepalify.process(inputText);
+    document.getElementById('converted_text').innerText = inputText;
 
     // Make an asynchronous request to the Flask backend hosted on Hugging Face
     fetch('https://huggingface.co/spaces/lord-reso/host/synthesize', {
