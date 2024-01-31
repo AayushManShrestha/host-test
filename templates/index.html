@@ -36,7 +36,7 @@
             <option value="Unicode">Unicode</option>
         </select>
 
-        <textarea oninput="processNepaliText();" name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required></textarea>
+        <textarea name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required></textarea>
 
         <button id="synthesize_button" onclick="synthesizeVoice()">Synthesize Voice</button>
         
@@ -114,11 +114,6 @@
             // Handle errors, if any
             console.error('Error during fetch:', error);
         });
-    }
-
-    function processNepaliText() {
-        var inputText = document.getElementById('input_text').value;
-        document.getElementById('converted_text').innerText = nepalify.process(inputText);
     }
     </script>
 </body>
