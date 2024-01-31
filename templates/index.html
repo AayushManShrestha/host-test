@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multispeaker Neural Voice Cloning in Nepali language</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script language="javascript" type="text/javascript" src="http://dl.dropboxusercontent.com/u/152048609/nepali.js"></script>
     <style>
         .container {
             max-width: 800px;
@@ -30,15 +31,13 @@
         <h1>Multispeaker Neural Voice Cloning in Nepali language</h1>
 
         <label for="font_select">Select Font Type:</label>
-        <select name="font_select" id="font_select" onchange="checkFontType()" required>
+        <select name="font_select" id="font_select" required>
             <option value="Preeti">Preeti</option>
             <option value="Unicode">Unicode</option>
         </select>
 
-        <!-- Include Nepali typing script -->
-        <script language="javascript" type="text/javascript" src="http://dl.dropboxusercontent.com/u/152048609/nepali.js"></script>
-
-        <textarea name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required></textarea>
+       
+        <textarea onkeyup="conversion();" name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required></textarea>
 
         <button id="synthesize_button" onclick="synthesizeVoice()">Synthesize Voice</button>
         
@@ -67,19 +66,6 @@
         </div>
     </div>
     <script>
-    function checkFontType() {
-        var fontType = document.getElementById('font_select').value;
-        var inputTextElement = document.getElementById('input_text');
-
-        // Enable Nepali typing only when font is Unicode
-        if (fontType === 'Unicode') {
-            inputTextElement.setAttribute('onkeyup', 'nepaliKeyUp(this)');
-        } else {
-            // Disable Nepali typing for other fonts
-            inputTextElement.removeAttribute('onkeyup');
-        }
-    }
-
     function synthesizeVoice() {
         alert('Generating audio. Please wait');
         var fontType = document.getElementById('font_select').value;
@@ -130,9 +116,6 @@
             console.error('Error during fetch:', error);
         });
     }
-
-    // Initial check on page load
-    checkFontType();
 </script>
 
 </body>
