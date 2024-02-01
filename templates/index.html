@@ -1,5 +1,3 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -19,17 +17,47 @@
             margin-top: 20px;
         }
 
+        #loading_screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         img {
             max-width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
         }
-
-        /* Add any additional styling as needed */
     </style>
 </head>
 <body>
+    <div id="loading_screen">
+        <div id="loader"></div>
+    </div>
+
     <div class="container">
         <h1>Multispeaker Neural Voice Cloning in Nepali language</h1>
 
@@ -42,7 +70,7 @@
         <textarea name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required></textarea>
 
         <button id="synthesize_button" onclick="synthesizeVoice()">Synthesize Voice</button>
-        
+
         <div id="output_section">
             <h2>Output</h2>
 
@@ -58,8 +86,7 @@
 
             <div id="audio_file">
                 <h3>Audio File</h3>
-                <!-- Provide a link to download the generated audio file -->
-                <a id="audio_link" href="#" download="generated_audio.wav">Download Audio</a>
+                <audio controls id="audio_player"></audio>
             </div>
 
             <div id="waveform">
@@ -70,15 +97,30 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Remove the loading screen once the content is loaded
+            hideLoadingScreen();
+        });
+        
+        function showLoadingScreen() {
+            document.getElementById('loading_screen').style.display = 'flex';
+        }
+
+        function hideLoadingScreen() {
+            document.getElementById('loading_screen').style.display = 'none';
+        }
+
         function synthesizeVoice() {
+            showLoadingScreen();
+
             var fontType = document.getElementById('font_select').value;
             var inputText = document.getElementById('input_text').value;
-    
+
             // Display the input text after conversion
             document.getElementById('converted_text').innerText = inputText;
-    
+
             // Make an asynchronous request to the Flask backend
-            fetch('https://lord-reso-host.hf.space/synthesize', {
+            fetch('/synthesize', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,39 +129,36 @@
                     font_select: fontType,
                     input_text: inputText,
                 }),
-		mode: 'no-cors',
             })
             .then(response => response.json())
             .then(data => {
+                hideLoadingScreen();
                 // Handle the response from the backend
                 // Update the content of the output sections based on the response
-    
+
                 // Update Mel-Spectrogram
                 var melSpectrogramElement = document.getElementById('mel_spectrogram');
                 melSpectrogramElement.innerHTML = '<h3>Mel-Spectrogram</h3><img src="data:image/png;base64,' + data.mel_spectrogram + '" alt="Mel-Spectrogram">';
-    
-                // Provide a link to download the generated audio file
-                var audioLinkElement = document.getElementById('audio_link');
-                audioLinkElement.href = data.audio_path;
-    
-                // Create an audio element
-                var audioPlayerElement = document.createElement('audio');
-                audioPlayerElement.controls = true;
-                audioPlayerElement.src = data.audio_path;
-    
-                // Append the audio element to the audio_file div
-                var audioFileElement = document.getElementById('audio_file');
-                audioFileElement.innerHTML = '<h3>Audio File</h3>';
-                audioFileElement.appendChild(audioPlayerElement);
-    
-                // Play the audio
-                audioPlayerElement.play();
-                // Update other elements as needed
-    
-                // For now, let's alert the user with the response data (you can customize this part)
-                alert("Response from Backend:\n" + JSON.stringify(data));
+
+                // Update Waveform
+                var waveformElement = document.getElementById('waveform');
+                waveformElement.innerHTML = '<h3>Waveform</h3><img src="data:image/png;base64,' + data.waveform + '" alt="Waveform">';
+
+                // Use the existing audio element
+                var audio = document.getElementById('audio_player');
+
+                // Before playing the audio, check if it's already playing
+                if (!audio.paused) {
+                    audio.pause(); // Pause the audio if it's already playing
+                }
+
+                // Set the audio source
+                audio.src = 'data:audio/wav;base64,' + data.audio_data;
+                audio.type = 'audio/wav'; // Set the audio type explicitly
+                alert('Audio Generated');
             })
             .catch(error => {
+                hideLoadingScreen();
                 // Handle errors, if any
                 console.error('Error during fetch:', error);
             });
