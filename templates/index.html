@@ -51,12 +51,15 @@
         </div>
     </div>
 
+    <!-- Include the nepalify library from a CDN -->
+    <script src="https://unpkg.com/nepalify@0.5.0/umd/nepalify.production.min.js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Remove the loading screen once the content is loaded
             hideLoadingScreen();
         });
-        
+
         function showLoadingScreen() {
             document.getElementById('loading_screen').style.display = 'flex';
         }
@@ -67,9 +70,16 @@
 
         function synthesizeVoice() {
             showLoadingScreen();
+            var inputText;
+            var font_select = document.getElementById('font_select').value;
+            var input_text = document.getElementById('input_text').value;
 
-            var fontType = document.getElementById('font_select').value;
-            var inputText = document.getElementById('input_text').value;
+            // Use nepalify from the CDN
+            if (font_select == "Unicode") {
+                inputText = nepalify.format(input_text, { layout: "romanized" });
+            } else {
+                inputText = nepalify.format(input_text, { layout: "traditional" });
+            }
 
             // Display the input text after conversion
             document.getElementById('converted_text').innerText = inputText;
@@ -85,38 +95,38 @@
                     input_text: inputText,
                 }),
             })
-            .then(response => response.json())
-            .then(data => {
-                hideLoadingScreen();
-                // Handle the response from the backend
-                // Update the content of the output sections based on the response
+                .then(response => response.json())
+                .then(data => {
+                    hideLoadingScreen();
+                    // Handle the response from the backend
+                    // Update the content of the output sections based on the response
 
-                // Update Mel-Spectrogram
-                var melSpectrogramElement = document.getElementById('mel_spectrogram');
-                melSpectrogramElement.innerHTML = '<h3>Mel-Spectrogram</h3><img src="data:image/png;base64,' + data.mel_spectrogram + '" alt="Mel-Spectrogram">';
+                    // Update Mel-Spectrogram
+                    var melSpectrogramElement = document.getElementById('mel_spectrogram');
+                    melSpectrogramElement.innerHTML = '<h3>Mel-Spectrogram</h3><img src="data:image/png;base64,' + data.mel_spectrogram + '" alt="Mel-Spectrogram">';
 
-                // Update Waveform
-                var waveformElement = document.getElementById('waveform');
-                waveformElement.innerHTML = '<h3>Waveform</h3><img src="data:image/png;base64,' + data.waveform + '" alt="Waveform">';
+                    // Update Waveform
+                    var waveformElement = document.getElementById('waveform');
+                    waveformElement.innerHTML = '<h3>Waveform</h3><img src="data:image/png;base64,' + data.waveform + '" alt="Waveform">';
 
-                // Use the existing audio element
-                var audio = document.getElementById('audio_player');
+                    // Use the existing audio element
+                    var audio = document.getElementById('audio_player');
 
-                // Before playing the audio, check if it's already playing
-                if (!audio.paused) {
-                    audio.pause(); // Pause the audio if it's already playing
-                }
+                    // Before playing the audio, check if it's already playing
+                    if (!audio.paused) {
+                        audio.pause(); // Pause the audio if it's already playing
+                    }
 
-                // Set the audio source
-                audio.src = 'data:audio/wav;base64,' + data.audio_data;
-                audio.type = 'audio/wav'; // Set the audio type explicitly
-                alert('Audio Generated');
-            })
-            .catch(error => {
-                hideLoadingScreen();
-                // Handle errors, if any
-                console.error('Error during fetch:', error);
-            });
+                    // Set the audio source
+                    audio.src = 'data:audio/wav;base64,' + data.audio_data;
+                    audio.type = 'audio/wav'; // Set the audio type explicitly
+                    alert('Audio Generated');
+                })
+                .catch(error => {
+                    hideLoadingScreen();
+                    // Handle errors, if any
+                    console.error('Error during fetch:', error);
+                });
         }
     </script>
 </body>
