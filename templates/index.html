@@ -77,11 +77,11 @@
         function synthesizeVoice() {
             showLoadingScreen();
             var inputText;
-            var font_select = document.getElementById('font_select').value;
+            var fontType = document.getElementById('font_select').value;
             var input_text = document.getElementById('input_text').value;
 
             // Use nepalify from the CDN
-            if (font_select == "Unicode") {
+            if (fontType == "Unicode") {
                 inputText = nepalify.format(input_text, { layout: "romanized" });
             } else {
                 inputText = nepalify.format(input_text, { layout: "traditional" });
