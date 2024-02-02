@@ -89,13 +89,12 @@ h3 {
     color: #333;
 }
 
+
 /* Style each output section */
-#mel_spectrogram img,
-#waveform img {
-    max-width: 100%;  /* Ensure images don't exceed container width */
-    height: auto;
-    display: block;
-    margin: 0 auto;
+#mel_spectrogram,
+#audio_file,
+#waveform {
+    margin-top: 20px;
 }
 
 /* Style links within the audio_file section */
