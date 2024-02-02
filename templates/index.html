@@ -107,7 +107,7 @@
             document.getElementById('converted_text').innerText = inputText;
 
             // SSE initialization
-            var eventSource = new EventSource('https://lord-reso-host.hf.space/synthesize');
+            var eventSource = new EventSource('https://lord-reso-host.hf.space/liveprogress');
 
             // Event listener for progress updates
             eventSource.onmessage = function(event) {
