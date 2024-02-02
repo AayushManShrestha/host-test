@@ -1,4 +1,4 @@
-/* styles.css */
+/* Updated styles.css */
 
 body {
     font-family: 'Arial', sans-serif;
@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-    max-width: 1000px;  /* Updated width from the provided styles */
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
@@ -46,7 +46,7 @@ label {
 }
 
 #output_section {
-    margin-top: 20px;  /* Kept the existing margin-top property */
+    margin-top: 20px;
 }
 
 #loading_screen {
@@ -90,11 +90,12 @@ h3 {
 }
 
 /* Style each output section */
-#mel_spectrogram,
-#alignment_graph,
-#audio_file,
-#waveform {
-    margin-top: 20px;
+#mel_spectrogram img,
+#waveform img {
+    max-width: 100%;  /* Ensure images don't exceed container width */
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 /* Style links within the audio_file section */
@@ -107,4 +108,3 @@ h3 {
     border-radius: 3px;
     margin-top: 5px;
 }
-
