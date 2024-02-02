@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multispeaker Neural Voice Cloning in Nepali language</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
+    <link rel="stylesheet" href="/static/styles.css">
     <style>
         .container {
             max-width: 1000px;
@@ -17,28 +18,47 @@
             margin-top: 20px;
         }
 
+        #loading_screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         img {
             max-width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
         }
-        #progress_bar {
-            width: 100%;
-            height: 20px;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-            position: relative;
-        }
-
-        #progress_fill {
-            height: 100%;
-            width: 0;
-            background-color: #4caf50;
-        }
     </style>
 </head>
 <body>
+    <div id="loading_screen">
+        <div id="loader"></div>
+    </div>
+
     <div class="container">
         <h1>Multispeaker Neural Voice Cloning in Nepali language</h1>
 
@@ -75,10 +95,6 @@
                 <h3>Waveform</h3>
                 <!-- Display Waveform image or visualization here -->
             </div>
-
-            <div id="progress_bar">
-                <div id="progress_fill"></div>
-            </div>
         </div>
     </div>
 
@@ -86,18 +102,32 @@
     <script src="https://unpkg.com/nepalify@0.5.0/umd/nepalify.production.min.js"></script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Remove the loading screen once the content is loaded
+            hideLoadingScreen();
+        });
+
+        function showLoadingScreen() {
+            document.getElementById('loading_screen').style.display = 'flex';
+        }
+
+        function hideLoadingScreen() {
+            document.getElementById('loading_screen').style.display = 'none';
+        }
+
         function enableTextArea() {
             // Enable the text area when a font is selected
             document.getElementById('input_text').disabled = false;
         }
 
         function synthesizeVoice() {
+            showLoadingScreen();
             var inputText;
-            var fontType = document.getElementById('font_select').value;
+            var font_select = document.getElementById('font_select').value;
             var input_text = document.getElementById('input_text').value;
 
             // Use nepalify from the CDN
-            if (fontType == "Unicode") {
+            if (font_select == "Unicode") {
                 inputText = nepalify.format(input_text, { layout: "romanized" });
             } else {
                 inputText = nepalify.format(input_text, { layout: "traditional" });
@@ -106,22 +136,6 @@
             // Display the input text after conversion
             document.getElementById('converted_text').innerText = inputText;
 
-            // SSE initialization
-            var eventSource = new EventSource('https://lord-reso-host.hf.space/liveprogress');
-
-            // Event listener for progress updates
-            eventSource.onmessage = function(event) {
-                var progress = parseInt(event.data);
-                updateProgressBar(progress);
-            };
-
-            // Event listener for completion
-            eventSource.onerror = function(error) {
-                eventSource.close();
-                console.error('Error occurred:', error);
-                alert('Audio Generation Completed');
-            };
-            
             // Make an asynchronous request to the Flask backend
             fetch('https://lord-reso-host.hf.space/synthesize', {
                 method: 'POST',
@@ -132,10 +146,10 @@
                     font_select: fontType,
                     input_text: inputText,
                 }),
-                mode: 'no-cors'
             })
                 .then(response => response.json())
                 .then(data => {
+                    hideLoadingScreen();
                     // Handle the response from the backend
                     // Update the content of the output sections based on the response
 
@@ -161,15 +175,10 @@
                     alert('Audio Generated');
                 })
                 .catch(error => {
+                    hideLoadingScreen();
                     // Handle errors, if any
                     console.error('Error during fetch:', error);
                 });
-
-                // Function to update the progress bar
-            function updateProgressBar(progress) {
-                var progressBar = document.getElementById('progress_fill');
-                progressBar.style.width = progress + '%';
-            }
         }
     </script>
 </body>
