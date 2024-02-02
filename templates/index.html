@@ -120,7 +120,7 @@
             document.getElementById('converted_text').innerText = inputText;
 
             // Make an asynchronous request to the Flask backend
-            fetch('/synthesize', {
+            fetch('https://lord-reso-host.hf.space/synthesize', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
