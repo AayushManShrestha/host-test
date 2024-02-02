@@ -118,7 +118,6 @@
             // Event listener for completion
             eventSource.onerror = function(error) {
                 eventSource.close();
-                hideLoadingScreen();
                 console.error('Error occurred:', error);
                 alert('Audio Generation Completed');
             };
