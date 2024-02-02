@@ -17,12 +17,13 @@
         <h1>Multispeaker Neural Voice Cloning in Nepali language</h1>
 
         <label for="font_select">Select Font Type:</label>
-        <select name="font_select" id="font_select" required>
+        <select name="font_select" id="font_select" required onchange="enableTextArea()">
+            <option value="" selected disabled>Select a Font</option>
             <option value="Preeti">Preeti</option>
             <option value="Unicode">Unicode</option>
         </select>
 
-        <textarea name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required></textarea>
+        <textarea name="input_text" id="input_text" rows="4" cols="50" placeholder="Enter text..." required disabled></textarea>
 
         <button id="synthesize_button" onclick="synthesizeVoice()">Synthesize Voice</button>
 
@@ -66,6 +67,11 @@
 
         function hideLoadingScreen() {
             document.getElementById('loading_screen').style.display = 'none';
+        }
+
+        function enableTextArea() {
+            // Enable the text area when a font is selected
+            document.getElementById('input_text').disabled = false;
         }
 
         function synthesizeVoice() {
