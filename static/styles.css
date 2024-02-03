@@ -17,16 +17,22 @@ label {
     margin-bottom: 5px;
 }
 
-#font_select,
+#font_select{
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
 #input_text {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     box-sizing: border-box;
 }
 
 #synthesize_button {
-    background-color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.9);
     color: #fff;
     padding: 10px 15px;
     border: none;
@@ -34,6 +40,10 @@ label {
     cursor: pointer;
     display: block;
     width: 100%;
+}
+
+#synthesize_button:hover {
+    background-color: rgba(76, 175, 80, 1); /* Adjusted color for hover state */
 }
 
 h2,
@@ -55,4 +65,38 @@ h3 {
     text-decoration: none;
     border-radius: 3px;
     margin-top: 5px;
+}
+
+#keyboard_image {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 50%; /* Position at the horizontal center */
+    transform: translateX(-50%); /* Center the image */
+    width: 100%; /* Set the width to 1000px */
+    height: 50%; /* Set the height to 50% of the viewport height */
+    background-color: rgba(255, 255, 255, 0);
+    z-index: 999;
+}
+
+#keyboard_button {
+    background-color: rgba(76, 175, 80, 0.9);
+    color: #fff;
+    padding: 0 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: block;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#keyboard_button:hover {
+    background-color: rgba(76, 175, 80, 1);
+}
+
+#keyboard_image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
