@@ -31,7 +31,7 @@ label {
     box-sizing: border-box;
 }
 
-#synthesize_button {
+# synthesize_button {
     background-color: rgba(76, 175, 80, 0.9);
     color: #fff;
     padding: 10px 15px;
@@ -42,7 +42,7 @@ label {
     width: 100%;
 }
 
-#synthesize_button:hover {
+# synthesize_button:hover {
     background-color: rgba(76, 175, 80, 1); /* Adjusted color for hover state */
 }
 
