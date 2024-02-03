@@ -71,9 +71,9 @@
             <option value="Unicode">Unicode</option>
         </select>
 
-        <button id="keyboard_button" onclick="showKeyboard()">Click to view Preeti layout</button>
+        <button id="keyboard_button" onclick="showKeyboard()">View Preeti layout</button>
 
-        <div id="keyboard_image">
+        <div id="keyboard_image" style="display: none;">
             <img src="{{ url_for('static', filename='images/PreetiKeyboard.png') }}" alt="Nepali Keyboard">
         </div>
 
@@ -125,7 +125,7 @@
                 keyboardButton.innerText = 'Hide Preeti layout';
             } else {
                 keyboardImage.style.display = 'none';
-                keyboardButton.innerText = 'Show Preeti layout';
+                keyboardButton.innerText = 'View Preeti layout';
             }
         }
 
