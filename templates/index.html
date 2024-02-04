@@ -307,14 +307,17 @@
                 // Apply nepalify formatting based on fontType
                 if (fontType === "Unicode") {
                     // Use nepalify to format the input text with romanized layout
-                    var formattedText = nepalify.format(event.key, { layout: "romanized" });
+                    var formattedText = event.key;
+                    if(event.key === " "){
+                        textBeforeCursor = nepalify.format(textBeforeCursor, { layout: "romanized" });
+                    }
+                    var newText =  textBeforeCursor + formattedText + textAfterCursor;
                 } else {
                     // Use nepalify to format the input text with traditional layout
                     var formattedText = nepalify.format(event.key, { layout: "traditional" });
+                    var newText = textBeforeCursor + formattedText + textAfterCursor;
                 }
-
-                // Insert the formatted text at the cursor position
-                var newText = textBeforeCursor + formattedText + textAfterCursor;
+                
 
                 // Set the updated text back to the text area
                 inputTextArea.value = newText;
