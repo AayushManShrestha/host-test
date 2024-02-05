@@ -122,6 +122,7 @@
 <body>
     <div id="loading_screen">
         <div id="loader"></div>
+        <p>Loading...</p>
     </div>
 
     <div class="container">
@@ -133,6 +134,7 @@
             <option value="Preeti">Preeti</option>
             <option value="Unicode">Unicode</option>
         </select>
+        <div id="iframe-unicode" style="display: none;"></div>
 
         <button id="keyboard_button" onclick="showKeyboard()">View Preeti layout</button>
 
@@ -166,6 +168,41 @@
                 <h3>Waveform</h3>
                 <!-- Display Waveform image or visualization here -->
             </div>
+            <!-- Romanization Script for Unicode -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var contentContainer = document.getElementById("iframe-unicode");
+                    var htmlContent = `
+                        <div class="my-tools">
+                            <link rel="stylesheet" href="https://writenepali.com/assets/embed/style.css">
+                            <form name="Form1">
+                                <textarea class="textarea_unicode" id="roman" name="ascii" cols="62" rows="7" onKeyUp="javascript:convert();" placeholder="Enter Roman English..."></textarea>
+                                <div class="unicode_roman">
+                                    <textarea id="unicode_text" class="textarea_unicode" name="unicode" cols="62" rows="7" readonly></textarea>
+                                </div>
+                                <button class="copy-button" onclick="copyUnicode(event)" type="button">Copy</button>
+                                <input class="clear-button" type="button" value="Clear" onclick="clearContent()">
+                                <a class="iframe-link" href="https://writenepali.com/nepali-unicode/" title="Nepali Unicode">Nepali Unicode</a>
+                                <select class="btn" onChange="javascript:convert();" name="htmlEncode" style="display: none;">
+                                    <option value="false" selected="selected">Unicode</option>
+                                    <option value="true">HTML</option>
+                                </select>
+                                <input disabled="disabled" class="btn" onClick="javascript:translate(Form1.ascii, Form1.unicode, eval(Form1.htmlEncode.value), Form1.smartConverter_.checked);" value="Convert" name="convertNow" type="hidden">
+                                <input class="btn" onClick="javascript:smartConverter(Form1.smartConverter_.checked);convert();" checked="checked" name="smartConverter_" value="ON" type="checkbox" style="display:none;">
+                            </form>
+                        </div>`;
+                    var tempContainer = document.createElement("div");
+                    tempContainer.innerHTML = htmlContent;
+                    while (tempContainer.firstChild) {
+                        contentContainer.appendChild(tempContainer.firstChild);
+                    }
+                });
+
+                var scriptElement = document.createElement('script');
+                scriptElement.src = 'https://writenepali.com/assets/js/roman.js';
+                document.head.appendChild(scriptElement);
+            </script>
+
         </div>
     </div>
 
@@ -336,6 +373,46 @@
             // Clear the input_text textarea
             document.getElementById('input_text').value = '';
         }
+    </script>
+    <!-- Embedding Script when Unicode is selected -->
+    <script>
+        var iframeUnicode = document.getElementById('iframe-unicode');
+
+        // Add event listener for changes in font selection
+        document.getElementById('font_select').addEventListener('change', function () {
+            // Check if Unicode is selected
+            if (this.value === "Unicode") {
+                // Show the Unicode iframe and hide the Preeti iframe
+                iframeUnicode.style.display = 'block';
+                document.getElementById('iframe-preeti').style.display = 'none';
+            } else {
+                // Hide the Unicode iframe
+                iframeUnicode.style.display = 'none';
+            }
+        });
+    </script>
+
+    <!-- Embed Script for Unicode -->
+    <div id="iframe-unicode"></div>
+    <script src="https://writenepali.com/assets/embed/roman/script.js"></script>
+
+    <!-- Embed Script for Preeti -->
+    <div id="iframe-preeti"></div>
+    <script>
+        var fontSelect = document.getElementById('font_select');
+
+        // Add event listener for changes in font selection
+        fontSelect.addEventListener('change', function () {
+            // Check if Preeti is selected
+            if (fontSelect.value === "Preeti") {
+                // Show the Preeti iframe and hide the Unicode iframe
+                document.getElementById('iframe-preeti').style.display = 'block';
+                document.getElementById('iframe-unicode').style.display = 'none';
+            } else {
+                // Hide the Preeti iframe
+                document.getElementById('iframe-preeti').style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
