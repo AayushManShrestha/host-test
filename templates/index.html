@@ -224,7 +224,14 @@
             showLoadingScreen();
             var inputText;
             var fontType = document.getElementById('font_select').value;
-            var inputText = document.getElementById('input_text').value;
+            var input_text = document.getElementById('input_text').value;
+
+            // Use nepalify from the CDN
+            if (fontType == "Unicode") {
+                inputText = nepalify.format(input_text, { layout: "romanized" });
+            } else {
+                inputText = nepalify.format(input_text, { layout: "traditional" });
+            }
 
             // Display the input text after conversion
             document.getElementById('converted_text').innerText = inputText;
@@ -278,9 +285,11 @@
 
         function updateTextAreaLogic(event) {
             var fontType = document.getElementById('font_select').value;
+
             // Get the current value of the text area
             var inputTextArea = document.getElementById('input_text');
             var currentText = inputTextArea.value;
+
             // Get the cursor position
             var cursorPosition = inputTextArea.selectionStart;
 
@@ -288,6 +297,7 @@
             if (event.key === "Enter") {
                 // Manually trigger the synthesizeVoice function
                 synthesizeVoice();
+
                 // Prevent the default behavior of the keypress event
                 event.preventDefault();
             } else {
@@ -308,11 +318,13 @@
                     var formattedText = nepalify.format(event.key, { layout: "traditional" });
                     var newText = textBeforeCursor + formattedText + textAfterCursor;
                 }
-                
+
                 // Set the updated text back to the text area
                 inputTextArea.value = newText;
+
                 // Move the cursor to the end of the inserted text
                 inputTextArea.setSelectionRange(cursorPosition + formattedText.length, cursorPosition + formattedText.length);
+
                 // Prevent the default behavior of the keypress event
                 event.preventDefault();
             }
