@@ -9,7 +9,6 @@
     <style>
         @font-face {
             font-family: 'Preeti';
-            /* src: url('{{ url_for('static', filename='preeti.ttf') }}') format('truetype'); */
             src: url('static/preeti.ttf') format('truetype');
         }
 
@@ -33,8 +32,7 @@
             margin-bottom: 10px;
         }
         
-        #input_text[font="Preeti"] {
-            font-family: 'Preeti', sans-serif;
+        #input_text {
             width: 100%;
             padding: 5px;
             margin-top: 10px;
@@ -81,10 +79,10 @@
             display: none;
             position: fixed;
             bottom: 0;
-            left: 50%; /* Position at the horizontal center */
-            transform: translateX(-50%); /* Center the image */
-            width: 100%; /* Set the width to 1000px */
-            height: 50%; /* Set the height to 50% of the viewport height */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 50%;
             background-color: rgba(255, 255, 255, 0);
             z-index: 999;
         }
@@ -122,7 +120,7 @@
         }
         
         #synthesize_button:hover {
-            background-color: rgba(76, 175, 80, 1); /* Adjusted color for hover state */
+            background-color: rgba(76, 175, 80, 1);
         }
     </style>
 </head>
@@ -218,20 +216,15 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Remove the loading screen once the content is loaded
             hideLoadingScreen();
 
-            // Add an event listener to the input_text textarea for keypress
             var inputTextArea = document.getElementById('input_text');
             inputTextArea.addEventListener('keypress', function (event) {
-                // Add your logic to update only the text area here
                 updateTextAreaLogic(event);
             });
 
-            // Add an event listener to the font selection dropdown for change
             var fontSelect = document.getElementById('font_select');
             fontSelect.addEventListener('change', function () {
-                // Clear the input_text textarea when font selection is changed
                 clearInputText();
             });
         })
@@ -240,7 +233,6 @@
             var keyboardImage = document.getElementById('keyboard_image');
             var keyboardButton = document.getElementById('keyboard_button');
 
-            // Toggle the visibility of the keyboard image
             if (keyboardImage.style.display === 'none' || keyboardImage.style.display === '') {
                 keyboardImage.style.display = 'flex';
                 keyboardButton.innerText = 'Hide Preeti layout';
@@ -259,10 +251,8 @@
         }
 
         function enableTextArea() {
-            // Enable the text area when a font is selected
             document.getElementById('input_text').disabled = false;
         }
-
 
         function synthesizeVoice() {
             showLoadingScreen();
@@ -270,17 +260,14 @@
             var fontType = document.getElementById('font_select').value;
             var input_text = document.getElementById('input_text').value;
 
-            // Use nepalify from the CDN
             if (fontType == "Unicode") {
                 inputText = nepalify.format(input_text, { layout: "romanized" });
             } else {
                 inputText = nepalify.format(input_text, { layout: "traditional" });
             }
 
-            // Display the input text after conversion
             document.getElementById('converted_text').innerText = inputText;
 
-            // Make an asynchronous request to the Flask backend
             fetch('https://lord-reso-host.hf.space/synthesize', {
                 method: 'POST',
                 headers: {
@@ -295,96 +282,70 @@
                 .then(response => response.json())
                 .then(data => {
                     hideLoadingScreen();
-                    // Handle the response from the backend
-                    // Update the content of the output sections based on the response
 
-                    // Update Mel-Spectrogram
                     var melSpectrogramElement = document.getElementById('mel_spectrogram');
                     melSpectrogramElement.innerHTML = '<h3>Mel-Spectrogram</h3><img src="data:image/png;base64,' + data.mel_spectrogram + '" alt="Mel-Spectrogram">';
 
-                    // Update Waveform
                     var waveformElement = document.getElementById('waveform');
                     waveformElement.innerHTML = '<h3>Waveform</h3><img src="data:image/png;base64,' + data.waveform + '" alt="Waveform">';
 
-                    // Use the existing audio element
                     var audio = document.getElementById('audio_player');
 
-                    // Before playing the audio, check if it's already playing
                     if (!audio.paused) {
-                        audio.pause(); // Pause the audio if it's already playing
+                        audio.pause();
                     }
 
-                    // Set the audio source
                     audio.src = 'data:audio/wav;base64,' + data.audio_data;
-                    audio.type = 'audio/wav'; // Set the audio type explicitly
+                    audio.type = 'audio/wav';
                     alert('Audio Generated');
                 })
                 .catch(error => {
                     hideLoadingScreen();
-                    // Handle errors, if any
                     console.error('Error during fetch:', error);
                 });
         }
 
-
         function updateTextAreaLogic(event) {
             var fontType = document.getElementById('font_select').value;
 
-            // Get the current value of the text area
             var inputTextArea = document.getElementById('input_text');
             var currentText = inputTextArea.value;
 
-            // Get the cursor position
             var cursorPosition = inputTextArea.selectionStart;
 
-            // Check if the pressed key is Enter
             if (event.key === "Enter") {
-                // Manually trigger the synthesizeVoice function
                 synthesizeVoice();
-
-                // Prevent the default behavior of the keypress event
                 event.preventDefault();
             } else {
-                // Get the text before and after the cursor
                 var textBeforeCursor = currentText.substring(0, cursorPosition);
                 var textAfterCursor = currentText.substring(cursorPosition);
 
-                // Apply nepalify formatting based on fontType
                 if (fontType === "Unicode") {
-                    document.getElementById('input_text').style.fontFamily = 'sans-serif';
                     var formattedText = nepalify.format(event.key, { layout: "romanized" });
                 } else {
-                    // Apply Preeti font to the textarea
                     document.getElementById('input_text').style.fontFamily = 'Preeti';
                     formattedText = input_text;
                 }
-                // Insert the formatted text at the cursor position
+
                 var newText = textBeforeCursor + formattedText + textAfterCursor;
 
-                // Set the updated text back to the text area
                 inputTextArea.value = newText;
-
-                // Move the cursor to the end of the inserted text
                 inputTextArea.setSelectionRange(cursorPosition + formattedText.length, cursorPosition + formattedText.length);
-
-                // Prevent the default behavior of the keypress event
                 event.preventDefault();
             }
         }
+
         function clearInputText() {
-            // Clear the input_text textarea
             document.getElementById('input_text').value = '';
         }
     </script>
-     <script>
+
+    <script>
         var iframeUnicode = document.getElementById('iframe-unicode');
-        // Add event listener for changes in font selection
         document.getElementById('font_select').addEventListener('change', function () {
-            // Check if Unicode is selected
             if (this.value === "Unicode") {
                 iframeUnicode.style.display = 'block';
             } else {
-                // Hide the Unicode iframe
                 iframeUnicode.style.display = 'none';
             }
         });
