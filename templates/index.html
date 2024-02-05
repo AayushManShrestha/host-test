@@ -224,10 +224,10 @@
             showLoadingScreen();
             var inputText;
             var fontType = document.getElementById('font_select').value;
-            var input_text = document.getElementById('input_text').value;
+            var inputText = document.getElementById('input_text').value;
 
             // Display the input text after conversion
-            document.getElementById('converted_text').innerText = input_text;
+            document.getElementById('converted_text').innerText = inputText;
 
             // Make an asynchronous request to the Flask backend
             fetch('https://lord-reso-host.hf.space/synthesize', {
@@ -237,7 +237,7 @@
                 },
                 body: JSON.stringify({
                     font_select: fontType,
-                    input_text: input_text,
+                    input_text: inputText,
                 }),
                 mode: "no-cors"
             })
