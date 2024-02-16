@@ -273,9 +273,6 @@
                 reader.onload = function () {
                     // Encode the audio file to Base64
                     const base64Audio = reader.result.split(',')[1];
-
-                    // Store the Base64 encoded audio in a variable or use it directly in your POST request
-                    // Here, let's assume you have a variable named 'base64AudioData'
                     base64AudioData = base64Audio;
                 };
             }
@@ -310,8 +307,14 @@
                 }),
                 mode: 'no-cors'
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Response from server:', data); // Log the response
                     hideLoadingScreen();
                     // Handle the response from the backend
                     // Update the content of the output sections based on the response
