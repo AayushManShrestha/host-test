@@ -258,7 +258,8 @@
             // Enable the text area when a font is selected
             document.getElementById('input_text').disabled = false;
         }
-
+        
+        var base64AudioData;
         function handleAudioFileUpload() {
             const fileInput = document.getElementById('audio_file_input');
             const file = fileInput.files[0];
