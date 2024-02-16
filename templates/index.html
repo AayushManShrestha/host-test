@@ -128,6 +128,9 @@
     <div class="container">
         <h1>Multi-speaker Neural Voice Cloning in Nepali Language</h1>
 
+        <input type="file" accept=".mp3, .wav" id="audio_file_input" onchange="handleAudioFileUpload()">
+        <label for="audio_file_input">Upload Audio File</label>
+        
         <label for="font_select">Select Font Type:</label>
         <select name="font_select" id="font_select" required onchange="enableTextArea()">
             <option value="" selected disabled>Select a Font</option>
@@ -256,7 +259,27 @@
             document.getElementById('input_text').disabled = false;
         }
 
+        function handleAudioFileUpload() {
+            const fileInput = document.getElementById('audio_file_input');
+            const file = fileInput.files[0];
 
+            // Check if a file is selected
+            if (file) {
+                // Read the file as a Data URL
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                reader.onload = function () {
+                    // Encode the audio file to Base64
+                    const base64Audio = reader.result.split(',')[1];
+
+                    // Store the Base64 encoded audio in a variable or use it directly in your POST request
+                    // Here, let's assume you have a variable named 'base64AudioData'
+                    base64AudioData = base64Audio;
+                };
+            }
+        }
+        
         function synthesizeVoice() {
             showLoadingScreen();
             var inputText;
@@ -282,7 +305,9 @@
                 body: JSON.stringify({
                     font_select: fontType,
                     input_text: inputText,
+                    audio_data: base64AudioData // Include the Base64 encoded audio data
                 }),
+                mode: 'no-cors'
             })
                 .then(response => response.json())
                 .then(data => {
