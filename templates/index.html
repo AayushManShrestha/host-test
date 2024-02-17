@@ -128,9 +128,6 @@
     <div class="container">
         <h1>Multi-speaker Neural Voice Cloning in Nepali Language</h1>
 
-        <label for="audio_file_input">Upload Cloning Audio:</label>
-        <input type="file" accept=".mp3, .wav" id="audio_file_input" onchange="handleAudioFileUpload()">
-        
         <label for="font_select">Select Font Type:</label>
         <select name="font_select" id="font_select" required onchange="enableTextArea()">
             <option value="" selected disabled>Select a Font</option>
@@ -258,26 +255,8 @@
             // Enable the text area when a font is selected
             document.getElementById('input_text').disabled = false;
         }
-        
-        var base64AudioData;
-        function handleAudioFileUpload() {
-            const fileInput = document.getElementById('audio_file_input');
-            const file = fileInput.files[0];
 
-            // Check if a file is selected
-            if (file) {
-                // Read the file as a Data URL
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
 
-                reader.onload = function () {
-                    // Encode the audio file to Base64
-                    const base64Audio = reader.result.split(',')[1];
-                    base64AudioData = base64Audio;
-                };
-            }
-        }
-        
         function synthesizeVoice() {
             showLoadingScreen();
             var inputText;
@@ -303,18 +282,10 @@
                 body: JSON.stringify({
                     font_select: fontType,
                     input_text: inputText,
-                    audio_data: base64AudioData // Include the Base64 encoded audio data
                 }),
-                mode: 'no-cors'
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Response from server:', data); // Log the response
                     hideLoadingScreen();
                     // Handle the response from the backend
                     // Update the content of the output sections based on the response
